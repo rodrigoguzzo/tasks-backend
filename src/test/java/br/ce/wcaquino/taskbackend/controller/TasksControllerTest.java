@@ -3,8 +3,11 @@ package br.ce.wcaquino.taskbackend.controller;
 import java.time.LocalDate;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import br.ce.wcaquino.taskbackend.model.Task;
 import br.ce.wcaquino.taskbackend.repo.TaskRepo;
@@ -15,7 +18,14 @@ public class TasksControllerTest {
 	@Mock
 	private TaskRepo taskRepo;
 	
-	TaskController taskController;
+	@InjectMocks
+	private TaskController controller;
+	
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.openMocks(this);
+	}
 	
 
 	@Test
@@ -24,7 +34,7 @@ public class TasksControllerTest {
 		todo.setDueDate(LocalDate.now());
 		
 		try {
-			taskController.save(todo);
+			controller.save(todo);
 		} catch (ValidationException e) {
 			Assert.assertEquals("Fill the task description", e.getMessage());
 		}
@@ -37,7 +47,7 @@ public class TasksControllerTest {
 		todo.setTask("Descricao");
 		
 		try {
-			taskController.save(todo);
+			controller.save(todo);
 		} catch (ValidationException e) {
 			Assert.assertEquals("Fill the due date", e.getMessage());
 		}
@@ -50,7 +60,7 @@ public class TasksControllerTest {
 		todo.setDueDate(LocalDate.of(2010, 1, 1));
 		
 		try {
-			taskController.save(todo);
+			controller.save(todo);
 		} catch (ValidationException e) {
 			Assert.assertEquals("Due date must not be in past", e.getMessage());
 		}
@@ -64,7 +74,7 @@ public class TasksControllerTest {
 		todo.setTask("Descricao");
 		todo.setDueDate(LocalDate.of(2030, 1, 1));
 		
-		taskController.save(todo);
+		controller.save(todo);
 
 	}
 
